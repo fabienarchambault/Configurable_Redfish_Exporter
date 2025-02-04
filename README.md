@@ -39,19 +39,19 @@ There're two ways that you can use Redfish-Exporter:
 
 * Structure:
 
-  ```
-  templates/
-  |-- configs
-  |   |-- inventory.yml                            ### Define devices that need for collecting, you can check example
-  |   `-- sample.yml                               ### Define metrics using for prometheus metrics
-  `-- schemas
-      |-- Common.yml                               ### Schema that get common information for all vendor server (of course with Redfish DMTF supporting)
-      |-- DellPowerEdgeR630.yml                    ### Schema that get vendor information
-      |-- DellPowerEdgeR650.yml                    ### ...       
-      |-- DellPowerEdgeR750.yml
-      |-- HPEProLiantGen10.yml
-      `-- HPEProLiantGen9.yml
-  ```
+    ```
+    templates/
+    |-- configs
+    |   |-- inventory.yml                            ### Define devices that need for collecting, you can check example
+    |   |-- sample.yml                               ### Define metrics using for prometheus metrics
+    |-- schemas
+        |-- Common.yml                               ### Schema that get common information for all vendor server (of course with Redfish DMTF supporting)
+        |-- DellPowerEdgeR630.yml                    ### Schema that get vendor information
+        |-- DellPowerEdgeR650.yml                    ### ...       
+        |-- DellPowerEdgeR750.yml
+        |-- HPEProLiantGen10.yml
+        |-- HPEProLiantGen9.yml
+    ```
 
 #### Pull metrics from Redfish Exporter
 You need to have Prometheus Server or Victoria or else, change configuration on config file:
