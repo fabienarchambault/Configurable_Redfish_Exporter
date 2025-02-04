@@ -48,7 +48,7 @@ There're two ways that you can use Redfish-Exporter:
         |-- Common.yml                               ### Schema that get common information for all vendor server (of course with Redfish DMTF supporting)
         |-- DellPowerEdgeR630.yml                    ### Schema that get vendor information
         |-- DellPowerEdgeR650.yml                    ### ...       
-        |-- DellPowerEdgeR750.yml
+        |-- DellPowerEdgeR750.yml                    ### ...
         |-- HPEProLiantGen10.yml
         |-- HPEProLiantGen9.yml
     ```
