@@ -89,18 +89,19 @@ Data:
     Id: MemoryDIMM[*].Id
     BusWidthBits: BusWidthBits
     CacheSizeMiB: CacheSizeMiB
-    CapacityMiB: CapacityMiB
-    DataWidthBits: DataWidthBits
-    DeviceLocator: DeviceLocator
+    CapacityMiB: SizeMB
+    DataWidthBits: DataWidth
+    DeviceLocator: SocketLocator
     ErrorCorrection: ErrorCorrection
     LogicalSizeMiB: LogicalSizeMiB
     MemoryLocation: MemoryLocation
-    MemoryType: MemoryType
+    MemoryType: DIMMType
     Name: Name
+    Manufacturer: Manufacturer
     NonVolatileSizeMiB: NonVolatileSizeMiB
     PersistentRegionSizeLimitMiB: PersistentRegionSizeLimitMiB
-    RankCount: RankCount
-    Status: Status
+    RankCount: Rank
+    Status: DIMMStatus
     VendorID: VendorID
     VolatileRegionSizeLimitMiB: VolatileRegionSizeLimitMiB
     VolatileSizeMiB: VolatileSizeMiB
@@ -150,13 +151,13 @@ Data:
     Id: $.Thermal[*].Id
     Name: Name
     Fans:
-      Id: $.Thermal[*].Fans[*].MemberId
-      Name: Name
-      Reading: Reading
+      Id: $.Thermal[*].Fans[*].FanName
+      Name: FanName
+      Reading: CurrentReading
       ReadingUnits: ReadingUnits
       Status: Status
     Temperatures:
-      Id: $.Thermal[*].Temperatures[*].MemberId
+      Id: $.Thermal[*].Temperatures[*].Number
       Name: Name
       PhysicalContext: PhysicalContext
       ReadingCelsius: ReadingCelsius

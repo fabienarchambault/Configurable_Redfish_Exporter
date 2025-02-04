@@ -9,7 +9,7 @@ on:
 
 jobs:
   build_images:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       contents: read
       packages: write
@@ -31,8 +31,8 @@ jobs:
         push: true
         tags: |
           ghcr.io/${{ github.repository_owner }}/redfish-exporter:2.x.x
-          ghcr.io/${{ github.repository_owner }}/redfish-exporter:2.0.3
+          ghcr.io/${{ github.repository_owner }}/redfish-exporter:2.0.5
           ghcr.io/${{ github.repository_owner }}/redfish-exporter:latest
         build-args: |
-          appVersion=2.0.3
+          appVersion=2.0.5
           maintainer=Freezing
