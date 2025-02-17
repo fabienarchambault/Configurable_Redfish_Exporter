@@ -1,0 +1,119 @@
+name: Build and Test SVTECH App
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  # Modify your image and container here
+  IMAGE_TAG: '2.0.5' 
+  IMAGE_NAME: 'redfish-exporter'
+  CONTAINER_NAME: 'redfish-exporter'
+  CONTAINER_MAPPING_PORT: '9814:9814'
+
+jobs:  
+  build:
+    runs-on: ubuntu-dind
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build Docker image
+      run: docker build --build-arg git_token=${{ secrets.GITHUB_TOKEN }} --build-arg CACHEBUST=$(date +%s) --build-arg BRANCH=main --build-arg OWNER=${{ github.repository_owner }} -t ${{ env.IMAGE_NAME }} .
+
+    - id: run_and_check_container_status
+      name: Run App
+      uses: svtechnmaa/.github/actions/run_docker_container@main
+      with:
+        imageName: '${{ env.IMAGE_NAME }}'
+        containerName: '${{ env.CONTAINER_NAME }}'
+        containerMappingPort: '${{ env.CONTAINER_MAPPING_PORT }}'
+
+    - name: Downcase REPO
+      run: |
+        echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: '${{ github.repository_owner }}'
+        password: '${{ secrets.GITHUB_TOKEN }}'
+        
+    - name: Push image to GitHub Container Registry
+      run: |
+        docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/${{ env.REPO }}:${{ env.IMAGE_TAG }}
+        docker push ghcr.io/${{ env.REPO }}:${{ env.IMAGE_TAG }}
+
+        # Migrate from old workflow
+        docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/${{ env.REPO }}:2.x.x 
+        docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/${{ env.REPO }}:latest
+        docker push ghcr.io/${{ env.REPO }}:2.x.x 
+        docker push ghcr.io/${{ env.REPO }}:latest
+        
+
+  # THIS REPO HASN'T HAS /tests YET SO WE COMMENT THIS
+  # test: 
+  #   needs: build
+  #   runs-on: robot-dind
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+
+  #     - name: Downcase REPO
+  #       run: |
+  #         echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
+  #     - name: Login to GitHub Container Registry
+  #       uses: docker/login-action@v2
+  #       with:
+  #         registry: ghcr.io
+  #         username: '${{ github.repository_owner }}'
+  #         password: '${{ secrets.GITHUB_TOKEN }}'
+          
+  #     - name: Pull image from GitHub Container Registry
+  #       run: |
+  #         docker pull ghcr.io/${{ env.REPO }}:${{ env.IMAGE_TAG }}
+
+  #     - id: run_and_check_container_status
+  #       name: Run App
+  #       uses: svtechnmaa/.github/actions/run_docker_container@main
+  #       with:
+  #         imageName: 'ghcr.io/${{ env.REPO }}:${{ env.IMAGE_TAG }}'
+  #         containerName: '${{ env.CONTAINER_NAME }}'
+  #         containerMappingPort: '${{ env.CONTAINER_MAPPING_PORT }}'
+          
+  #     - name: Run Robot Framework tests
+  #       run: |
+  #         echo "##[command]robot tests/"
+  #         robot tests/
+
+  #     - name: Delete package from GHCR if test fails
+  #       if: failure() 
+  #       run: |
+  #         echo "Robot test failed, deleting package from GHCR..."
+  #         REPO_NAME=$(echo ${{ env.REPO }} | cut -d'/' -f2)
+  #         echo "Repo name: $REPO_NAME"
+  #         VERSION_ID=$(curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/users/${{ github.repository_owner }}/packages/container/$REPO_NAME/versions" | jq -r '.[] | select(.metadata.container.tags[] == "${{ env.IMAGE_TAG }}") | .id')
+  #         echo "Package version ID: $VERSION_ID"
+  #         curl -i -X DELETE -H 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' -H "Accept: application/vnd.github.v3+json" "https://api.github.com/users/${{ github.repository_owner }}/packages/container/$REPO_NAME/versions/$VERSION_ID"
+        
+  #     - name: 'Upload Artifact'
+  #       if: always()
+  #       uses: actions/upload-artifact@v4.6.0
+  #       with:
+  #         name: robot-test-report
+  #         path: ./report.html
+
+  #     - name: Push latest image to GitHub Container Registry
+  #       run: |
+  #         docker tag ghcr.io/${{ env.REPO }}:${{ env.IMAGE_TAG }} ghcr.io/${{ env.REPO }}:latest
+  #         docker push ghcr.io/${{ env.REPO }}:latest
