@@ -43,14 +43,14 @@ jobs:
         
     - name: Push image to GitHub Container Registry
       run: |
-        docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/redfish-exporter:${{ env.IMAGE_TAG }}
-        docker push ghcr.io/redfish-exporter:${{ env.IMAGE_TAG }}
+        docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/${{ github.repository_owner }}/redfish-exporter:${{ env.IMAGE_TAG }}
+        docker push ghcr.io/${{ github.repository_owner }}/redfish-exporter:${{ env.IMAGE_TAG }}
 
         # Migrate from old workflow
-        docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/redfish-exporter:2.x.x 
-        docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/redfish-exporter:latest
-        docker push ghcr.io/redfish-exporter:2.x.x 
-        docker push ghcr.io/redfish-exporter:latest
+        docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/${{ github.repository_owner }}/redfish-exporter:2.x.x 
+        docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/${{ github.repository_owner }}/redfish-exporter:latest
+        docker push ghcr.io/${{ github.repository_owner }}/redfish-exporter:2.x.x 
+        docker push ghcr.io/${{ github.repository_owner }}/redfish-exporter:latest
         
 
   # THIS REPO HASN'T HAS /tests YET SO WE COMMENT THIS
@@ -77,13 +77,13 @@ jobs:
           
   #     - name: Pull image from GitHub Container Registry
   #       run: |
-  #         docker pull ghcr.io/redfish-exporter:${{ env.IMAGE_TAG }}
+  #         docker pull ghcr.io/${{ github.repository_owner }}/redfish-exporter:${{ env.IMAGE_TAG }}
 
   #     - id: run_and_check_container_status
   #       name: Run App
   #       uses: svtechnmaa/.github/actions/run_docker_container@main
   #       with:
-  #         imageName: 'ghcr.io/redfish-exporter:${{ env.IMAGE_TAG }}'
+  #         imageName: 'ghcr.io/${{ github.repository_owner }}/redfish-exporter:${{ env.IMAGE_TAG }}'
   #         containerName: '${{ env.CONTAINER_NAME }}'
   #         containerMappingPort: '${{ env.CONTAINER_MAPPING_PORT }}'
           
@@ -111,5 +111,5 @@ jobs:
 
   #     - name: Push latest image to GitHub Container Registry
   #       run: |
-  #         docker tag ghcr.io/redfish-exporter:${{ env.IMAGE_TAG }} ghcr.io/redfish-exporter:latest
-  #         docker push ghcr.io/redfish-exporter:latest
+  #         docker tag ghcr.io/${{ github.repository_owner }}/redfish-exporter:${{ env.IMAGE_TAG }} ghcr.io/${{ github.repository_owner }}/redfish-exporter:latest
+  #         docker push ghcr.io/${{ github.repository_owner }}/redfish-exporter:latest
