@@ -1,32 +1,32 @@
-import json
+# import json
 import logging
 import re
 import asyncio
 from .rawCollector import jsonpathCollector,dataJSONWriter
 
+def remove_odata_elements(d,notUseValue):
+    if isinstance(d, dict):
+        # Use dictionary comprehension to create a new dict without @odata keys
+        return {k: remove_odata_elements(v,notUseValue) for k, v in d.items() if not k.startswith(notUseValue)}
+    elif isinstance(d, list):
+        # If the element is a list, apply the function to each item in the list
+        return [remove_odata_elements(i,notUseValue) for i in d]
+    return d  # Return the item if it's neither a dict nor a list
+
+def fixListConverter(data):
+    if isinstance(data, dict):
+        if all(isinstance(member, int) for member in data.keys()):
+            return [fixListConverter(value) for member, value in sorted(data.items())]
+        else:
+            return {member: fixListConverter(value) for member, value in data.items()}
+    elif isinstance(data, list):
+        return [fixListConverter(i) for i in data]
+    else:
+        return data
+
 def dataReconstructor(dataRaw,dataNewSchema, templateDir, serverAddress,logLevel):
     # logFormat = '%(asctime)s [%(levelname)s] %(message)s'
     # logging.basicConfig(format=logFormat, level=logLevel.upper())
-    def remove_odata_elements(d,notUseValue):
-        if isinstance(d, dict):
-            # Use dictionary comprehension to create a new dict without @odata keys
-            return {k: remove_odata_elements(v,notUseValue) for k, v in d.items() if not k.startswith(notUseValue)}
-        elif isinstance(d, list):
-            # If the element is a list, apply the function to each item in the list
-            return [remove_odata_elements(i,notUseValue) for i in d]
-        return d  # Return the item if it's neither a dict nor a list
-    
-    def fixListConverter(data):
-        if isinstance(data, dict):
-            if all(isinstance(member, int) for member in data.keys()):
-                return [fixListConverter(value) for member, value in sorted(data.items())]
-            else:
-                return {member: fixListConverter(value) for member, value in data.items()}
-        elif isinstance(data, list):
-            return [fixListConverter(i) for i in data]
-        else:
-            return data
-
     cleaned_data=dataRaw
     notUseValueList = ['@odata','Oem']
     for notUseValue in notUseValueList:

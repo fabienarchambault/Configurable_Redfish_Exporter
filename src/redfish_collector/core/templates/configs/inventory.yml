@@ -7,18 +7,3 @@
 - serverAddress: 10.97.12.3
   username: readonly
   password: juniper@123
-- serverAddress: 10.97.12.5
-  username: readonly
-  password: juniper@123
-- serverAddress: 10.97.99.1
-  username: readonly
-  password: juniper@123
-- serverAddress: 10.1.0.42
-  username: readonly
-  password: juniper@123
-- serverAddress: 10.98.11.194
-  username: readonly
-  password: juniper@123
-- serverAddress: 10.98.11.10
-  username: readonly
-  password: juniper@123

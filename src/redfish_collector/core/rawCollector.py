@@ -74,7 +74,7 @@ async def fetch(url,username,password, session,serverAddress):
 
 async def fetch_all(urls: list(),username,password,serverAddress):
     timeout = ClientTimeout(total=180)
-    dataRaw = dict()
+    # dataRaw = dict()
     try: 
         async with ClientSession(timeout=timeout) as session:
             # if len(urls) == 1:
@@ -87,8 +87,8 @@ async def fetch_all(urls: list(),username,password,serverAddress):
         logging.error("[%s] There error with %s" % (serverAddress,e))
 
 async def rawDataCollector(serverAddress,schemaContent,keyDict: dict,username,password,logLevel):
-    # logFormat = '%(asctime)s [%(levelname)s] [' + serverAddress + '] %(message)s'
-    # logging.basicConfig(format=logFormat, level=logLevel.upper())
+    logFormat = '%(asctime)s [%(levelname)s] %(message)s'
+    logging.basicConfig(format=logFormat, level=logLevel.upper())
     logging.debug("[%s] Key schemaContent: %s" % (serverAddress,schemaContent))
     logging.debug("[%s] Key ID Dict: %s" % (serverAddress,keyDict))
     if isinstance(schemaContent,dict):
@@ -155,7 +155,7 @@ async def dataCollector(serverAddress,username,password,templateDir,logLevel):
     # logging.basicConfig(format=logFormat, level=logLevel.upper())
 
     ### Read schema from schemas/Common.yml file
-    endpointURL = "https://%s" % serverAddress
+    # endpointURL = "https://%s" % serverAddress
     # auth = (username,password)
     base = templateDir + "schemas/Common.yml"
     # base = templateDir + "schemas/HPEProLiantGen10.yml"
