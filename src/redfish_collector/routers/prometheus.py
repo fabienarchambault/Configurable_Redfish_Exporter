@@ -53,6 +53,7 @@ async def read_all(serverAddress: IPvAnyAddress = Query(None), \
                 with open('%sinventory.yml' %REDFISH_DATA, 'w') as f:
                     yaml.dump([block], f, default_flow_style=False)
             else:
+                existed = False
                 for server in inventory:
                     if server['serverAddress'] == str(serverAddress):
                         server['username'] = str(username)
@@ -61,7 +62,7 @@ async def read_all(serverAddress: IPvAnyAddress = Query(None), \
                         existed = True
                     # if float(server['timeCalled']) > time.time() - 300:
                     #     inventory.remove(server)
-                if not existed:
+                if existed is False:
                     inventory.append(block)
                 with open('%sinventory.yml' %REDFISH_DATA, 'w') as f:
                     yaml.dump(inventory, f, default_flow_style=False)

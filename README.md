@@ -71,6 +71,8 @@ You need to have Prometheus Server or Victoria or else, change configuration on 
       params:
         serverAddress: ['<server-idrac-or-ilo-ip>']
         config: ['sample']
+	username: ['<username>']
+	password: ['<password>']
       static_configs:
       - targets: ["<exporter-ip>:9814"]
     ```
@@ -80,7 +82,7 @@ You can use `curl` command to query server for testing data:
 * For example:
 
     ```bash
-    curl -XGET 'http://<exporter-ip>:<exporter-port>/metrics?serverAddress=<server-ip>&config=<file name in config dir>'
+    curl -XGET 'http://<exporter-ip>:<exporter-port>/metrics?serverAddress=<server-ip>&config=<file name in config dir>'&username=<username login server>&password=<password login server>
     ```
 
 Other way you can connect to FastAPI doc WebUI:
