@@ -106,8 +106,11 @@ jobs:
   #       if: always()
   #       uses: actions/upload-artifact@v4.6.0
   #       with:
-  #         name: robot-test-report
-  #         path: ./report.html
+  #         name: robot-test-result-#${{  github.run_number }}
+  #         path: | 
+  #           ./output.xml
+  #           ./log.html
+  #           ./report.html
 
   #     - name: Push latest image to GitHub Container Registry
   #       run: |
