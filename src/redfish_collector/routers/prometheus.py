@@ -1,15 +1,18 @@
-from fastapi import HTTPException,Path,APIRouter, Query
+from fastapi import HTTPException,APIRouter, Query
 from fastapi.responses import PlainTextResponse
 from pydantic import IPvAnyAddress
 from starlette import status
 from ..core.rawCollector import jsonpathCollector,readYAMLTemplate
-from os import path,makedirs
+from os import path
 import re
 import json
 import logging
 import time
+import yaml
 from prometheus_client import generate_latest, Summary, REGISTRY, PROCESS_COLLECTOR, PLATFORM_COLLECTOR, Gauge, CollectorRegistry
 # from ..config import Settings
+
+REDFISH_DATA = '/tmp/redfish-data/'
 
 # settings = Settings()
 templateDir = config_path = path.join(path.dirname(__file__), '../core/templates/')
@@ -31,13 +34,42 @@ router = APIRouter(
 
 @router.get("", status_code=status.HTTP_200_OK)
 async def read_all(serverAddress: IPvAnyAddress = Query(None), \
-                    # username: str = Query(None), \
-                    # password: str = Query(None), \
+                    username: str = Query(None), \
+                    password: str = Query(None), \
                     config: str = Query(None)):
-    if (serverAddress is None) or (config is None):
+    if (serverAddress is None) or (config is None) or (username is None) or (password is None):
+    # if (serverAddress is None) or (config is None):
         raise HTTPException(status_code=401, detail = 'Collect metrics Failed, please add params')
+
     # if path.isfile(config_file_path):
-    
+    else:
+        inventoryFile = REDFISH_DATA + 'inventory.yml'
+        try:
+            with open(inventoryFile, 'r') as f:
+                yamlContent = f.read()
+                inventory = yaml.safe_load(yamlContent)
+            block = {'serverAddress': str(serverAddress),'username': str(username),'password': str(password),'timeCalled': time.time()}
+            if not inventory:
+                with open('%sinventory.yml' %REDFISH_DATA, 'w') as f:
+                    yaml.dump([block], f, default_flow_style=False)
+            else:
+                existed = False
+                for server in inventory:
+                    if server['serverAddress'] == str(serverAddress):
+                        server['username'] = str(username)
+                        server['password'] = str(password)
+                        server['timeCalled'] = time.time()
+                        existed = True
+                    # if float(server['timeCalled']) > time.time() - 300:
+                    #     inventory.remove(server)
+                if existed is False:
+                    inventory.append(block)
+                with open('%sinventory.yml' %REDFISH_DATA, 'w') as f:
+                    yaml.dump(inventory, f, default_flow_style=False)
+        except Exception as err:
+            logging.error("Generate instance failed: %s" %err)
+            return False
+
     cacheInfo="%s%s" % (serverAddress,config)
     if cacheInfo in CACHE:
         cachedResponse, timestamp = CACHE[cacheInfo]
@@ -48,7 +80,7 @@ async def read_all(serverAddress: IPvAnyAddress = Query(None), \
     try:
         start_time = time.time()
         dataDir = '/tmp/redfish-data/NewData/%s.json' %serverAddress 
-        config_file_path = path.join(path.dirname(__file__), dataDir)
+        # config_file_path = path.join(path.dirname(__file__), dataDir)
         with open(dataDir, 'r') as file:
             # dataContent = f.read()
             collectedData = json.load(file)
