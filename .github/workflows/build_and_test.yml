@@ -206,6 +206,7 @@ jobs:
         docker push ghcr.io/${{ github.repository_owner }}/redfish-exporter:2.x.x 
         docker push ghcr.io/${{ github.repository_owner }}/redfish-exporter:latest
         
+        
 
   # THIS REPO HASN'T HAS /tests YET SO WE COMMENT THIS
   # test: 
