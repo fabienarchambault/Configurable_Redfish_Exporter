@@ -2,16 +2,18 @@ name: Build and Test SVTECH App
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "feat/bypass_rules-workflow" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "feat/bypass_rules-workflow" ]
 
 env:
   # Modify your image and container here
+  IMAGE_TEST_TAG: ${{ format('test-v{0}', github.run_number) }}
   IMAGE_TAG: '2.0.5' 
   IMAGE_NAME: 'redfish-exporter'
   CONTAINER_NAME: 'redfish-exporter'
   CONTAINER_MAPPING_PORT: '9814:9814'
+  COMMIT_FULL_ID: ${{ inputs.commit_id || github.sha }
 
 jobs:  
   build:
@@ -19,12 +21,156 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
+    outputs:
+      check_no_ci: ${{ steps.check_commit_message.outputs.no_ci }}
+      check_no_scan: ${{ steps.check_commit_message.outputs.no_scan }}
+      check_no_cache: ${{ steps.check_commit_message.outputs.no_cache }}
+      is_latest_or_release_image: ${{ steps.check_existing_image.outputs.is_latest_or_release_image }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        ref: ${{ env.COMMIT_FULL_ID }}
 
-    - name: Build Docker image
-      run: docker build --build-arg git_token=${{ secrets.GITHUB_TOKEN }} --build-arg CACHEBUST=$(date +%s) --build-arg BRANCH=main --build-arg OWNER=${{ github.repository_owner }} -t ${{ env.IMAGE_NAME }} .
+    - name: Downcase REPO and shorten COMMIT ID
+      run: |
+        COMMIT_SHORT_ID=$(git rev-parse --short ${{ env.COMMIT_FULL_ID }})
+        echo "COMMIT_SHORT_ID=${COMMIT_SHORT_ID}" >>${GITHUB_ENV}
+        echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+        echo "COMMIT_SHORT_ID=${{ env.COMMIT_SHORT_ID }}"
+        echo "REPO=${{ env.REPO }}"
+
+    ## Check commit message for no-ci, no-scan, no-cache
+    - name: Check commit message
+      id: check_commit_message
+      run: |
+        commit_message=$(git log --pretty=format:"%H %s %b" | grep "${{ env.COMMIT_FULL_ID }}" | sed 's,'${{ env.COMMIT_FULL_ID }}' ,,g')
+
+        if [[ "$commit_message" =~ .*"no-ci".* ]]; then
+            echo "❌ Found 'no-ci' in commit message. Stopping workflow!"
+            echo "no_ci=true" >> $GITHUB_OUTPUT
+
+        elif [[ "$commit_message" =~ .*"no-scan".* ]]; then
+            echo "🛑 Found 'no_scan' in commit message. Skipping image and Dockerfile scan!"
+            echo "no_scan=true" >> $GITHUB_OUTPUT
+            
+        elif [[ "$commit_message" =~ .*"no-cache".* ]]; then
+            echo "⚡ Found 'no_cache' in commit message. Skipping caching during image build!"
+            echo "no_cache=true" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Check existing image in GHCR
+      if: steps.check_commit_message.outputs.no_ci != 'true'
+      id: check_existing_image
+      run: |
+        REPO_NAME=$(echo ${{ env.REPO }} | cut -d'/' -f2)
+        
+        IMAGES=$(curl -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" "https://api.github.com/users/${{ github.repository_owner }}/packages/container/$REPO_NAME/versions" | jq -r ' .[] | {tags: .metadata.container.tags, updated_at: .updated_at, id: .id} ')
+
+        EXISTED_IMAGE=$(echo $IMAGES | jq -c 'select(.tags | contains(["${{ env.COMMIT_SHORT_ID }}"]))')
+
+        if [[ -z $EXISTED_IMAGE ]]; then
+          echo "is_image_tag_by_commit_id_existed=false" >> $GITHUB_OUTPUT
+        else
+          FULL_TAGS=$(echo $EXISTED_IMAGE | jq -c '.tags')
+          if [[ $FULL_TAGS == *"latest"* || $FULL_TAGS =~ v[0-9]+\.[0-9]+\.[0-9]+ ]]; then    
+            echo "is_latest_or_release_image=true" >> $GITHUB_OUTPUT
+            echo "is_latest_or_release_image=true"
+          else
+            echo "is_latest_or_release_image=false" >> $GITHUB_OUTPUT
+            echo "is_latest_or_release_image=false"
+          fi
+
+          echo "Image which has tag ${{ env.COMMIT_SHORT_ID }} is existed. The full tags are $FULL_TAGS. Skipping the rest of the build job..."
+          echo "is_image_tag_by_commit_id_existed=true" >> $GITHUB_OUTPUT
+        fi       
+    - name: Get Job ID
+      if: steps.check_commit_message.outputs.no_ci != 'true'
+      id: get_job_id
+      run: |
+        curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+        "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs" \
+        | jq '.jobs[] | select(.name=="build") | .id' > job_id.txt
+        echo "job_id=$(cat job_id.txt)" >> $GITHUB_OUTPUT
+
+    - name: Determine Commit ID and Comitter Email
+      if: steps.check_commit_message.outputs.no_ci != 'true'
+      id: determine_commit_id_and_email_author
+      run: |
+        if [[ ${{ github.event_name }} == 'workflow_dispatch' ]]; then
+          COMMIT_ID=${{ github.event.inputs.commit_id }}
+          COMMIT_AUTHOR_EMAIL=$(git show -s --format='%ae' $COMMIT_ID)
+          COMMIT_AUTHOR_NAME=$(git show -s --format='%aN' $COMMIT_ID)
+        else
+          COMMIT_ID=${{ github.event.head_commit.id }}
+          COMMIT_AUTHOR_EMAIL=${{ github.event.head_commit.author.email }}
+          COMMIT_AUTHOR_NAME=${{ github.event.head_commit.author.name }}
+        fi
+
+        echo "COMMIT_ID=${COMMIT_ID}" >> $GITHUB_OUTPUT
+        echo "COMMIT_AUTHOR_EMAIL=${COMMIT_AUTHOR_EMAIL}" >> $GITHUB_OUTPUT
+        echo "COMMIT_AUTHOR_NAME=${COMMIT_AUTHOR_NAME}" >> $GITHUB_OUTPUT
+
+    - name: Login to Docker Container Registry (no cache)
+      if: |
+        (github.event_name == 'push' || github.event_name == 'pull_request' || steps.check_existing_image.outputs.is_image_tag_by_commit_id_existed == 'false') && 
+        (steps.check_commit_message.outputs.no_cache == 'true' && steps.check_commit_message.outputs.no_ci != 'true')
+      uses: docker/login-action@v2
+      with:
+        registry: docker.io
+        username: '${{ secrets.DOCKER_HUB_USERNAME }}'
+        password: '${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}'
+    - name: Build Docker image (no cache)
+      if: |
+        (github.event_name == 'push' || github.event_name == 'pull_request' || steps.check_existing_image.outputs.is_image_tag_by_commit_id_existed == 'false') &&
+        (steps.check_commit_message.outputs.no_cache == 'true' && steps.check_commit_message.outputs.no_ci != 'true')
+      run: |
+        docker build --no-cache -t ${{ env.IMAGE_NAME }} .
+    - name: Login to GitHub Container Registry
+      if: |
+        (github.event_name == 'push' || github.event_name == 'pull_request' || 
+        steps.check_existing_image.outputs.is_image_tag_by_commit_id_existed == 'false') && 
+        steps.check_commit_message.outputs.no_ci != 'true'
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: '${{ github.repository_owner }}'
+        password: '${{ secrets.GH_TOKEN }}'
+    - name: Build Docker image (with cache)
+      if: |
+        (github.event_name == 'push' || github.event_name == 'pull_request') &&
+        (steps.check_commit_message.outputs.no_cache != 'true' && steps.check_commit_message.outputs.no_ci != 'true')
+      run: |
+        docker pull ghcr.io/${{ env.REPO }}:latest || true
+        docker build --build-arg BUILDKIT_INLINE_CACHE=1 \
+          --cache-from ghcr.io/${{ env.REPO }}:latest -t ${{ env.IMAGE_NAME }} .
+
+    - name: Scan Dockerfile using Trivy and send mail if vulnerabilities detected
+      if: steps.check_commit_message.outputs.no_ci != 'true' && steps.check_commit_message.outputs.no_scan != 'true'
+      uses: svtechnmaa/.github/actions/run_trivy_scan_dockerfile@main
+      with:
+        dockerfile_path: './Dockerfile'
+        commit_id: ${{ steps.determine_commit_id_and_email_author.outputs.COMMIT_ID }}
+        mail_username: ${{ vars.MAIL_USERNAME }}
+        mail_password: ${{ secrets.MAIL_PASSWORD }}
+        commit_author_email: ${{ steps.determine_commit_id_and_email_author.outputs.COMMIT_AUTHOR_EMAIL }}
+        commit_author_name: ${{ steps.determine_commit_id_and_email_author.outputs.COMMIT_AUTHOR_NAME }}
+        job_id: ${{ steps.get_job_id.outputs.job_id }}
+
+    - name: Scan Docker image using Trivy and send mail if vulnerabilities detected
+      if: steps.check_commit_message.outputs.no_ci != 'true' && steps.check_commit_message.outputs.no_scan != 'true'
+      uses: svtechnmaa/.github/actions/run_trivy_scan_image@main
+      with:
+        trivy_server: ${{ secrets.TRIVY_SERVER }}
+        image_name: ${{env.IMAGE_NAME}}
+        image_tag: 'latest'
+        commit_id: ${{ steps.determine_commit_id_and_email_author.outputs.COMMIT_ID }}
+        mail_username: ${{ vars.MAIL_USERNAME }}
+        mail_password: ${{ secrets.MAIL_PASSWORD }}
+        commit_author_email: ${{ steps.determine_commit_id_and_email_author.outputs.COMMIT_AUTHOR_EMAIL }}
+        commit_author_name: ${{ steps.determine_commit_id_and_email_author.outputs.COMMIT_AUTHOR_NAME }}
+        job_id: ${{ steps.get_job_id.outputs.job_id }}
 
     - id: run_and_check_container_status
       name: Run App
@@ -34,17 +180,12 @@ jobs:
         containerName: '${{ env.CONTAINER_NAME }}'
         containerMappingPort: '${{ env.CONTAINER_MAPPING_PORT }}'
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v2
-      with:
-        registry: ghcr.io
-        username: '${{ github.repository_owner }}'
-        password: '${{ secrets.GITHUB_TOKEN }}'
-        
     - name: Push image to GitHub Container Registry
       run: |
-        docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/${{ github.repository_owner }}/redfish-exporter:${{ env.IMAGE_TAG }}
-        docker push ghcr.io/${{ github.repository_owner }}/redfish-exporter:${{ env.IMAGE_TAG }}
+        docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/${{ env.REPO }}:${{ env.IMAGE_TEST_TAG }}
+        docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/${{ env.REPO }}:${{ env.COMMIT_SHORT_ID }}
+        docker push ghcr.io/${{ env.REPO }}:${{ env.IMAGE_TEST_TAG }}
+        docker push ghcr.io/${{ env.REPO }}:${{ env.COMMIT_SHORT_ID }}
 
         # Migrate from old workflow
         docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/${{ github.repository_owner }}/redfish-exporter:2.x.x 
