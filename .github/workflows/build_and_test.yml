@@ -39,7 +39,6 @@ jobs:
       check_no_ci: ${{ steps.check_commit_message.outputs.no_ci }}
       check_no_scan: ${{ steps.check_commit_message.outputs.no_scan }}
       check_no_cache: ${{ steps.check_commit_message.outputs.no_cache }}
-      is_latest_or_release_image: ${{ steps.check_existing_image.outputs.is_latest_or_release_image }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -71,33 +70,7 @@ jobs:
         elif [[ "$commit_message" =~ .*"no-cache".* ]]; then
             echo "⚡ Found 'no_cache' in commit message. Skipping caching during image build!"
             echo "no_cache=true" >> $GITHUB_OUTPUT
-        fi
-
-    - name: Check existing image in GHCR
-      if: steps.check_commit_message.outputs.no_ci != 'true'
-      id: check_existing_image
-      run: |
-        REPO_NAME=$(echo ${{ env.REPO }} | cut -d'/' -f2)
-        
-        IMAGES=$(curl -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" "https://api.github.com/users/${{ github.repository_owner }}/packages/container/$REPO_NAME/versions" | jq -r ' .[] | {tags: .metadata.container.tags, updated_at: .updated_at, id: .id} ')
-
-        EXISTED_IMAGE=$(echo $IMAGES | jq -c 'select(.tags | contains(["${{ env.COMMIT_SHORT_ID }}"]))')
-
-        if [[ -z $EXISTED_IMAGE ]]; then
-          echo "is_image_tag_by_commit_id_existed=false" >> $GITHUB_OUTPUT
-        else
-          FULL_TAGS=$(echo $EXISTED_IMAGE | jq -c '.tags')
-          if [[ $FULL_TAGS == *"latest"* || $FULL_TAGS =~ v[0-9]+\.[0-9]+\.[0-9]+ ]]; then    
-            echo "is_latest_or_release_image=true" >> $GITHUB_OUTPUT
-            echo "is_latest_or_release_image=true"
-          else
-            echo "is_latest_or_release_image=false" >> $GITHUB_OUTPUT
-            echo "is_latest_or_release_image=false"
-          fi
-
-          echo "Image which has tag ${{ env.COMMIT_SHORT_ID }} is existed. The full tags are $FULL_TAGS. Skipping the rest of the build job..."
-          echo "is_image_tag_by_commit_id_existed=true" >> $GITHUB_OUTPUT
-        fi       
+        fi      
     - name: Get Job ID
       if: steps.check_commit_message.outputs.no_ci != 'true'
       id: get_job_id
@@ -185,8 +158,9 @@ jobs:
         commit_author_name: ${{ steps.determine_commit_id_and_email_author.outputs.COMMIT_AUTHOR_NAME }}
         job_id: ${{ steps.get_job_id.outputs.job_id }}
 
-    - id: run_and_check_container_status
-      name: Run App
+    - name: Run App
+      id: run_and_check_container_status
+      if: steps.check_commit_message.outputs.no_ci != 'true'
       uses: svtechnmaa/.github/actions/run_docker_container@main
       with:
         imageName: '${{ env.IMAGE_NAME }}'
@@ -194,6 +168,7 @@ jobs:
         containerMappingPort: '${{ env.CONTAINER_MAPPING_PORT }}'
 
     - name: Push image to GitHub Container Registry
+      if: steps.check_commit_message.outputs.no_ci != 'true'
       run: |
         docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/${{ env.REPO }}:${{ env.IMAGE_TEST_TAG }}
         docker tag ${{ env.IMAGE_NAME }}:latest ghcr.io/${{ env.REPO }}:${{ env.COMMIT_SHORT_ID }}
@@ -206,7 +181,7 @@ jobs:
         docker push ghcr.io/${{ github.repository_owner }}/redfish-exporter:2.x.x 
         docker push ghcr.io/${{ github.repository_owner }}/redfish-exporter:latest
         
-        
+
 
   # THIS REPO HASN'T HAS /tests YET SO WE COMMENT THIS
   # test: 
