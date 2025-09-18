@@ -2,9 +2,9 @@ name: Build and Test SVTECH App
 
 on:
   push:
-    branches: [ "feat/bypass_rules-workflow" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "feat/bypass_rules-workflow" ]
+    branches: [ "main" ]
 
   workflow_dispatch:
     inputs:
