@@ -6,6 +6,19 @@ on:
   pull_request:
     branches: [ "feat/bypass_rules-workflow" ]
 
+  workflow_dispatch:
+    inputs:
+      commit_id:
+        description: 'Full commit ID to build (default: latest commit). e.g daae94a0f72a13f7092812fa42d684b2af827xxx. WARNING: release job will NOT run by this trigger'
+        type: string
+      run_test:
+        description: 'Run test'
+        default: true
+        type: boolean
+      keep_image: 
+        description: 'Keep image in GHCR even test fails'
+        type: boolean
+        default: false    
 env:
   # Modify your image and container here
   IMAGE_TEST_TAG: ${{ format('test-v{0}', github.run_number) }}
