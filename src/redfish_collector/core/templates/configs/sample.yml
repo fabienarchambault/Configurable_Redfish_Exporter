@@ -26,7 +26,7 @@ Metrics:
     Description: 'physical server metal drive status'
     Type: Gauge
     Result: State
-    Label: ["ServerAddress","HostName","Model", "MediaType", "SerialNumber","BlockSizeBytes","CapacityGB"]
+    Label: ["ServerAddress","HostName","Model", "MediaType", "SerialNumber","BlockSizeBytes","CapacityGB","CapacityB"]
     Datapoint: ArrayController.PhysicalDrive
     StatusCode:
       ENABLED: 0
@@ -39,7 +39,7 @@ Metrics:
     Description: 'physical server metal drive health'
     Type: Gauge
     Result: Health
-    Label: ["ServerAddress","HostName","Model", "MediaType", "SerialNumber","BlockSizeBytes","CapacityGB"]
+    Label: ["ServerAddress","HostName","Model", "MediaType", "SerialNumber","BlockSizeBytes","CapacityGB","CapacityB"]
     Datapoint: ArrayController.PhysicalDrive
     StatusCode:
       OK: 0
@@ -107,6 +107,7 @@ Metrics:
       DISABLED: 2
       GOODINUSE: 0
       UNKNOWN: 99
+      ABSENT: 2
   - Name: PhysicalServer_processorHealth
     Description: 'physical server processor health'
     Type: Gauge
@@ -118,6 +119,7 @@ Metrics:
       WARNING: 1
       CRITICAL: 2
       UNKNOWN: 99
+      ABSENT: 2
   - Name: PhysicalServer_fanStatus
     Description: 'physical server fan status'
     Type: Gauge

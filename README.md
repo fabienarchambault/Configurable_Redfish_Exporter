@@ -54,7 +54,7 @@ There're two ways that you can use Redfish-Exporter:
     ```
 
 #### Pull metrics from Redfish Exporter
-You need to have Prometheus Server or Victoria or else, change configuration on config file:
+You need to have Prometheus Server or Victoria Metrics or else, change configuration on config file:
 * For example:
   
     ```
@@ -76,6 +76,35 @@ You need to have Prometheus Server or Victoria or else, change configuration on 
       static_configs:
       - targets: ["<exporter-ip>:9814"]
     ```
+
+If you want to scale out deployment for load balancing, you should have a `pvc` or `hostpath` that shared data with each pod, like this:
+
+    ```
+    volumeMounts:
+    - mountPath: /opt/redfish_exporter/templates/configs
+      name: exporter-config-volume
+    - mountPath: /tmp/redfish-data/NewData
+      name: redfish-data-volume
+      subPath: NewData
+    - mountPath: /tmp/redfish-data/RawData
+      name: redfish-data-volume
+      subPath: RawData
+
+    ---
+
+    volumes:
+    - name: redfish-data-volume
+      persistentVolumeClaim:
+        claimName: redfish-data-pvc
+    - name: exporter-config-volume
+      configMap:
+        defaultMode: 420
+        items:
+        - key: sample.yml
+          path: sample.yml
+        name: redfish-exporter-configmap
+    ```
+NOTE: Just mount NewData/RawData/sample. Don't mount inventory in redfish-data folder when scale out.
 
 #### Query metrics for testing
 You can use `curl` command to query server for testing data:
