@@ -70,6 +70,7 @@ Data:
       CapacityGB: CapacityGB
       CapacityLogicalBlocks: CapacityLogicalBlocks
       CapacityMiB: CapacityMiB
+      CapacityB: CapacityBytes
       CarrierApplicationVersion: CarrierApplicationVersion
       InterfaceSpeedMbps: InterfaceSpeedMbps
       InterfaceType: InterfaceType
@@ -80,7 +81,7 @@ Data:
       Model: Model
       Name: Name
       PowerOnHours: PowerOnHours
-      SSDEnduranceUtilizationPercentage: SSDEnduranceUtilizationPercentage
+      SSDEnduranceUtilizationPercentage: PredictedMediaLifeLeftPercent
       SerialNumber: SerialNumber
       Status: Status
       UncorrectedReadErrors: UncorrectedReadErrors
@@ -90,6 +91,7 @@ Data:
     BusWidthBits: BusWidthBits
     CacheSizeMiB: CacheSizeMiB
     CapacityMiB: CapacityMiB
+    SerialNumber: SerialNumber
     DataWidthBits: DataWidthBits
     DeviceLocator: DeviceLocator
     ErrorCorrection: ErrorCorrection

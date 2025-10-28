@@ -53,8 +53,6 @@ spec:
         configMap:
           name: redfish-configs
           items:
-          - key: "inventory.yml"
-            path: "inventory.yml"
           - key: "sample.yml"
             path: "sample.yml"
 
