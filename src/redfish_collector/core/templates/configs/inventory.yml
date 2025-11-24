@@ -1,9 +1,0 @@
-- serverAddress: 10.97.12.1
-  username: readonly
-  password: juniper@123
-- serverAddress: 10.97.12.2
-  username: readonly
-  password: juniper@123
-- serverAddress: 10.97.12.3
-  username: readonly
-  password: juniper@123

@@ -12,6 +12,20 @@ Folder structure should as follow:
 - deployment files
 
 ## Guide:
+#### Add Readonly ILO/IDRAC Account (IMPORTANT)
+You need to define a readonly account on ILO/IDRAC, We will use this account for collecting data (on sample.yml file or somewhere like that):
+* Example:
+
+  ```
+  cat sample.yml
+
+  Auth:
+  Username: readonly
+  Password: juniper@123
+  ...
+  ```
+Tips: If somecases we don't have an unique account for all ILO/IDRAC, we can define more file with: <name>.yml same with sample.yml that I defined, then we can add other account and use prometheus query with parameter: config: <name>. Check `Pull metrics from Redfish Exporter` or `Query metrics for testing` section
+
 #### Create Exporter
 There're two ways that you can use Redfish-Exporter:
 * Using Container Images:
@@ -43,7 +57,7 @@ There're two ways that you can use Redfish-Exporter:
     templates/
     |-- configs
     |   |-- inventory.yml                            ### Define devices that need for collecting, you can check example
-    |   |-- sample.yml                               ### Define metrics using for prometheus metrics
+    |   |-- sample.yml                               ### Define Auth (Using Readonly ILO/IDRAC Account) - Metrics (Using to define prometheus metrics)
     |-- schemas
         |-- Common.yml                               ### Schema that get common information for all vendor server (of course with Redfish DMTF supporting)
         |-- DellPowerEdgeR630.yml                    ### Schema that get vendor information
@@ -71,8 +85,6 @@ You need to have Prometheus Server or Victoria Metrics or else, change configura
       params:
         serverAddress: ['<server-idrac-or-ilo-ip>']
         config: ['sample']
-	username: ['<username>']
-	password: ['<password>']
       static_configs:
       - targets: ["<exporter-ip>:9814"]
     ```
@@ -111,7 +123,7 @@ You can use `curl` command to query server for testing data:
 * For example:
 
     ```bash
-    curl -XGET 'http://<exporter-ip>:<exporter-port>/metrics?serverAddress=<server-ip>&config=<file name in config dir>'&username=<username login server>&password=<password login server>
+    curl -XGET 'http://<exporter-ip>:<exporter-port>/metrics?serverAddress=<server-ip>&config=<file name in config dir>'
     ```
 
 Other way you can connect to FastAPI doc WebUI:

@@ -51,12 +51,13 @@ def dataJSONWriter(dataRaw,fileDir,fileName, serverAddress):
             json.dump(dataRaw, file)
         logging.info("[%s] Write data successfully at %s%s" % (serverAddress,fileDir,fileName))
     except Exception as e:
-        logging.error("[%s] There error with %s" % (serverAddress,e))
+        logging.error("[%s] There dataJSONWriter error with %s" % (serverAddress,e))
+        json.dump([],file)
     return
 
 async def fetch(url,username,password, session,serverAddress):
     auth = BasicAuth(username,password)
-    retries=3
+    retries=5
     backoffFactor=0.5
     for attempt in range(1,retries+1):
         try:
@@ -84,7 +85,8 @@ async def fetch_all(urls: list(),username,password,serverAddress):
             results = await asyncio.gather(*tasks)
             return results
     except Exception as e:
-        logging.error("[%s] There error with %s" % (serverAddress,e))
+        logging.error("[%s] There fetch_all error with %s" % (serverAddress,e))
+        raise
 
 async def rawDataCollector(serverAddress,schemaContent,keyDict: dict,username,password,logLevel):
     logFormat = '%(asctime)s [%(levelname)s] %(message)s'
@@ -118,6 +120,7 @@ async def rawDataCollector(serverAddress,schemaContent,keyDict: dict,username,pa
             # logging.info(childURIList)
             if childURIList is False:
                 logging.warning("[%s] Child URI List isn't existed" % serverAddress)
+                logging.error("[%s] childURIList:\n%s" % (serverAddress,tempRaw))
                 return
             childURLList = ["https://%s%s" % (serverAddress,path) for path in childURIList]
             dataRawList = await fetch_all(childURLList,username,password,serverAddress)
