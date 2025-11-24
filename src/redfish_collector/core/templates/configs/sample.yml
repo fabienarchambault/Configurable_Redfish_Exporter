@@ -1,3 +1,6 @@
+Auth:
+  Username: readonly
+  Password: juniper@123
 Metrics:
   - Name: PhysicalServer_State
     Description: 'physical server state status'
@@ -157,15 +160,29 @@ Metrics:
       GOODINUSE: 0
       UNKNOWN: 99
       ABSENT: 2
-  # - Name: PhysicalServer_powerControlStatus
-  #   Description: 'physical server power control status'
-  #   Type: Gauge
-  #   Label: ["ServerAddress","HostName","PowerCapacityWatts","PowerLimitWatts","AverageConsumedWatts"]
-  #   Datapoint: PowerControl
-  #   Result: PowerConsumedWatts
-  # - Name: PhysicalServer_temperatureValue
-  #   Description: 'physical server temperature value'
-  #   Type: Gauge
-  #   Label: ["ServerAddress","HostName","Name"]
-  #   Datapoint: Temperature
-  #   Result: ReadingCelsius
+  - Name: PhysicalServer_LastPowerOutputWatts
+    Description: 'physical server power supplie status'
+    Type: Gauge
+    Label: ["ServerAddress","HostName","Model","LineInputVoltage","LineInputVoltageType","PowerSupplyType","PowerOutputWatts","PowerCapacityWatts","Manufacturer","SerialNumber"]
+    Datapoint: Power.PowerSupplies
+    Result: LastPowerOutputWatts
+  - Name: PhysicalServer_CPUUtilizationPercent
+    Description: 'physical server cpu utilization percent'
+    Type: Gauge
+    Label: ["ServerAddress","HostName"]
+    Datapoint: Common
+    Result: CPUUtil  
+  - Name: PhysicalServer_JitterCount
+    Description: 'physical server jitter count'
+    Type: Gauge
+    Label: ["ServerAddress","HostName"]
+    Datapoint: Common
+    Result: JitterCount
+  - Name: PhysicalServer_MemoryBusUtilPercent
+    Description: 'physical server memory bus utilization percent'
+    Type: Gauge
+    Label: ["ServerAddress","HostName"]
+    Datapoint: Common
+    Result: MemoryBusUtil
+  
+  

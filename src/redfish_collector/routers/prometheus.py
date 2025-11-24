@@ -34,10 +34,11 @@ router = APIRouter(
 
 @router.get("", status_code=status.HTTP_200_OK)
 async def read_all(serverAddress: IPvAnyAddress = Query(None), \
-                    username: str = Query(None), \
-                    password: str = Query(None), \
+                    # username: str = Query(None), \
+                    # password: str = Query(None), \
                     config: str = Query(None)):
-    if (serverAddress is None) or (config is None) or (username is None) or (password is None):
+    # if (serverAddress is None) or (config is None) or (username is None) or (password is None):
+    if (serverAddress is None) or (config is None):
     # if (serverAddress is None) or (config is None):
         raise HTTPException(status_code=401, detail = 'Collect metrics Failed, please add params')
 
@@ -45,10 +46,25 @@ async def read_all(serverAddress: IPvAnyAddress = Query(None), \
     else:
         inventoryFile = REDFISH_DATA + 'inventory.yml'
         try:
+            metricsConfigFile = templateDir + "configs/" + config + ".yml"
+            metricsConfig = readYAMLTemplate(metricsConfigFile)
+            if "Auth" in metricsConfig:
+                username = metricsConfig['Auth']['Username']
+                password = metricsConfig['Auth']['Password']
+            else:
+                logging.error("[%s] Can't find Auth in config file %s" % (serverAddress,config))
+                return False
+            cacheInfo="%s%s" % (serverAddress,config)
+            if cacheInfo in CACHE:
+                cachedResponse, timestamp = CACHE[cacheInfo]
+                if time.time() - timestamp < int(60):
+                    logging.info("[%s] Complete gathering health-check information from cache (1 minute cache to avoid DOS)" %serverAddress)
+                    return PlainTextResponse(cachedResponse)
+
             with open(inventoryFile, 'r') as f:
                 yamlContent = f.read()
                 inventory = yaml.safe_load(yamlContent)
-            block = {'serverAddress': str(serverAddress),'username': str(username),'password': str(password),'timeCalled': time.time()}
+            block = {'serverAddress': str(serverAddress), 'username': str(username), 'password': str(password) ,'timeCalled': time.time()}
             if not inventory:
                 with open('%sinventory.yml' %REDFISH_DATA, 'w') as f:
                     yaml.dump([block], f, default_flow_style=False)
@@ -70,13 +86,6 @@ async def read_all(serverAddress: IPvAnyAddress = Query(None), \
             logging.error("Generate instance failed: %s" %err)
             return False
 
-    cacheInfo="%s%s" % (serverAddress,config)
-    if cacheInfo in CACHE:
-        cachedResponse, timestamp = CACHE[cacheInfo]
-        if time.time() - timestamp < int(45):
-            logging.info("[%s] Complete gathering health-check information from cache" %serverAddress)
-            return PlainTextResponse(cachedResponse)
-
     try:
         start_time = time.time()
         dataDir = '/tmp/redfish-data/NewData/%s.json' %serverAddress 
@@ -87,9 +96,6 @@ async def read_all(serverAddress: IPvAnyAddress = Query(None), \
             # return data
 
         hostName = collectedData['Common'][0]['HostName']
-        metricsConfigFile = templateDir + "configs/" + config + ".yml"
-        # logging.info("Metrics file: %s" %metricsConfigFile)
-        metricsConfig = readYAMLTemplate(metricsConfigFile)
         registry = CollectorRegistry()
         componentMetrics={}
         for metric in metricsConfig['Metrics']:

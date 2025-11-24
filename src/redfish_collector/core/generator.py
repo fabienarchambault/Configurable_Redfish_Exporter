@@ -18,10 +18,12 @@ def redfishCollector(serverAddress,username,password):
     try:
         dataRaw, dataNewSchema, modelSchemaDir = asyncio.run(dataCollector(serverAddress,username,password,templateDir,logLevel))
         dataReconstructor(dataRaw, dataNewSchema, modelSchemaDir, serverAddress,logLevel)
+        return
     except Exception as err:
         logging.error("[%s] Tried collecting data failed: %s" %(serverAddress,err))
-    # logging.info("Generate finished")
-    return
+        with open('%sNewData/%s.json' % (REDFISH_DATA, serverAddress), 'w') as f:
+            pass
+        raise
 
 def generatorMultiThreading():
     while True:

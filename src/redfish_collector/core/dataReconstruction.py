@@ -28,7 +28,7 @@ def dataReconstructor(dataRaw,dataNewSchema, templateDir, serverAddress,logLevel
     # logFormat = '%(asctime)s [%(levelname)s] %(message)s'
     # logging.basicConfig(format=logFormat, level=logLevel.upper())
     cleaned_data=dataRaw
-    notUseValueList = ['@odata','Oem']
+    notUseValueList = ['@odata']
     for notUseValue in notUseValueList:
         cleaned_data = remove_odata_elements(cleaned_data,notUseValue)
     # return cleaned_data

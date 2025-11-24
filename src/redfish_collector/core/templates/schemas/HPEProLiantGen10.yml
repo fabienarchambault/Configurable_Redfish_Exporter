@@ -46,6 +46,13 @@ Data:
     Status: Status
     SystemType: SystemType
     UUID: UUID
+    AvgCPU0Freq: Oem.Hpe.SystemUsage.AvgCPU0Freq
+    CPU0Power: Oem.Hpe.SystemUsage.CPU0Power
+    CPUICUtil: Oem.Hpe.SystemUsage.CPUICUtil
+    CPUUtil: Oem.Hpe.SystemUsage.CPUUtil
+    IOBusUtil: Oem.Hpe.SystemUsage.IOBusUtil
+    JitterCount: Oem.Hpe.SystemUsage.JitterCount
+    MemoryBusUtil: Oem.Hpe.SystemUsage.MemoryBusUtil
   ArrayController:
     Id: $.ArrayController[*].Id
     AdapterType: AdapterType
