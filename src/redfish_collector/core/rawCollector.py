@@ -45,9 +45,9 @@ def getKeyDictFromURLPath(url, keyDict):
 
 def dataJSONWriter(dataRaw,fileDir,fileName, serverAddress):
     if path.isdir(fileDir):
-        logging.debug("[%s] Dir %s is existed" % (serverAddress,fileDir))
+        logging.debug("[%s] Dir %s exists" % (serverAddress,fileDir))
     else:
-        logging.info("[%s] Dir %s is not existed, will create it" % (serverAddress,fileDir))
+        logging.info("[%s] Dir %s does not exist, create it" % (serverAddress,fileDir))
         makedirs(fileDir, exist_ok=True)
     try:
         with open('%s%s' % (fileDir,fileName), 'w') as file:
