@@ -35,9 +35,11 @@ def dataReconstructor(dataRaw,dataNewSchema, templateDir, serverAddress,logLevel
 
     IdPoints = dict()
     idList = jsonpathCollector(dataNewSchema,str("$..Id"),output='fullpath&value')
+    logging.debug("[%s] Id list from schema: %s" % (serverAddress, idList))
     # logging.info("[%s] Id: %s" % idList)
     for key in idList:
         result = jsonpathCollector(cleaned_data,idList[key],output='fullpath&value')
+        logging.debug("[%s] Id from data raw for key %s: %s" % (serverAddress, key, result))
         # logging.info("[%s] Id from data raw %s: %s" % (key,result))
         IdPoints.update(result)
     logging.debug("[%s] Id Points: %s" % (serverAddress,IdPoints))
