@@ -11,6 +11,36 @@ import logging
 import time
 from prometheus_client import generate_latest, Gauge, CollectorRegistry
 
+
+def validate_server_address(serverAddress: str):
+    """Validate that the serverAddress is a valid IP address with optional port."""
+    # Split into address and port parts
+    if ":" in serverAddress:
+        parts = serverAddress.rsplit(":", 1)
+        if len(parts) == 2:
+            ip_address = parts[0]
+            port = parts[1]
+            # Validate IP address
+            try:
+                IPvAnyAddress(ip_address)
+            except:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                   detail=f"Invalid IP address: {ip_address}")
+            # Validate port
+            if not port.isdigit() or int(port) < 1 or int(port) > 65535:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                  detail=f"Invalid port: {port}")
+        else:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                              detail="Invalid serverAddress format")
+    else:
+        # No port specified, validate as plain IP address
+        try:
+            IPvAnyAddress(serverAddress)
+        except:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                              detail=f"Invalid IP address: {serverAddress}")
+
 REDFISH_DATA = '/tmp/redfish-data/'
 
 templateDir = config_path = path.join(path.dirname(__file__), '../core/templates/')
@@ -22,11 +52,14 @@ router = APIRouter(
 )
 
 @router.get("", status_code=status.HTTP_200_OK)
-async def read_all(serverAddress: IPvAnyAddress = Query(None), config: str = Query(None), loglevel: str = Query("info")) -> PlainTextResponse:
+async def read_all(serverAddress: str = Query(None), config: str = Query(None), loglevel: str = Query("info")) -> PlainTextResponse:
     componentMetrics={}
     if (serverAddress is None) or (config is None):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail = 'Collect metrics Failed, please add params')
     else: 
+        # Validate serverAddress format
+        validate_server_address(serverAddress)
+
         registry = CollectorRegistry()
         componentMetrics['PhysicalServer_Query'] = Gauge('PhysicalServer_Query','physical server query status',['ServerAddress'],registry=registry)
         # timeCalled = time.ctime()
