@@ -60,6 +60,15 @@ async def read_all(serverAddress: str = Query(None), config: str = Query(None), 
         # Validate serverAddress format
         validate_server_address(serverAddress)
 
+        # Set logging level based on the loglevel parameter
+        import logging
+        logger = logging.getLogger()
+        numeric_level = getattr(logging, loglevel.upper(), None)
+        if not isinstance(numeric_level, int):
+            raise ValueError(f'Invalid log level: {loglevel}')
+        logger.setLevel(numeric_level)
+        logging.info(f"Set logging level to {loglevel.upper()}")
+
         registry = CollectorRegistry()
         componentMetrics['PhysicalServer_Query'] = Gauge('PhysicalServer_Query','physical server query status',['ServerAddress'],registry=registry)
         # timeCalled = time.ctime()
