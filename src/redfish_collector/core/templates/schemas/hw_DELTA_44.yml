@@ -1,0 +1,17 @@
+Metadata:
+  Sensors:
+    "$inituri": /redfish/v1/Chassis/chassis/Sensors/
+  Sensors_bmc_temp:
+    "$inituri": /redfish/v1/Chassis/chassis/Sensors/bmc_temp
+  Common:
+    "$inituri": /redfish/v1/Managers/SMC/NetworkProtocol
+
+Data:
+  Sensors_bmc_temp:
+    Reading: Reading
+    Id: $.Sensors_bmc_temp[*].Id
+    Name: Name
+  Common:
+    Id: $.Common[*].Id
+    HostName: HostName
+    Status: Status

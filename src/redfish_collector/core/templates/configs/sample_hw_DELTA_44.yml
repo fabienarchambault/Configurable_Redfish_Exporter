@@ -1,0 +1,998 @@
+Auth:
+  Username: root
+  Password: 0penBmc
+Metrics:
+  - Name: bmc_temp
+    Description: 'BMC Temperature'
+    Type: Gauge
+    Label: ["ServerAddress"]
+    Datapoint: Sensors_bmc_temp
+    Result: Reading
+  # - Name: AllSensors_CPU
+  #   Description: 'CPU Usage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "CPU"
+  # - Name: AllSensors_Memory
+  #   Description: 'Memory Usage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "Memory"
+  # - Name: AllSensors_Storage_RW
+  #   Description: 'Storage Read/Write'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "Storage_RW"
+  # - Name: AllSensors_total_power_in
+  #   Description: 'Total Power Input'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "total_power_in"
+  # - Name: AllSensors_total_power_out
+  #   Description: 'Total Power Output'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "total_power_out"
+  # - Name: AllSensors_hotswap_input_current
+  #   Description: 'hotswap_input_current'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "hotswap_input_current"
+  # - Name: AllSensors_hotswap_input_power
+  #   Description: 'hotswap_input_power'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "hotswap_input_power"
+  # - Name: AllSensors_hotswap_temp
+  #   Description: 'hotswap_temp'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "hotswap_temp"
+  # - Name: AllSensors_hotswap_input_voltage
+  #   Description: 'hotswap_input_voltage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "hotswap_input_voltage"
+  # - Name: AllSensors_hotswap_output_voltage
+  #   Description: 'hotswap_output_voltage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "hotswap_output_voltage"
+  # - Name: AllSensors_bmc_12v
+  #   Description: 'bmc_12v'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "bmc_12v"
+  # - Name: AllSensors_bmc_3v3
+  #   Description: 'bmc_3v3'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "bmc_3v3"
+  # - Name: AllSensors_bmc_5v
+  #   Description: 'bmc_5v'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "bmc_5v"
+  # - Name: AllSensors_total_power_in_A
+  #   Description: 'total_power_in_A'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "total_power_in_A"
+  # - Name: AllSensors_total_efficiency
+  #   Description: 'total_efficiency'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "total_efficiency"
+  # - Name: AllSensors_voltage_in_A_B
+  #   Description: 'voltage_in_A_B'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "voltage_in_A_B"
+  # - Name: AllSensors_max_voltage_out
+  #   Description: 'max_voltage_out'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "max_voltage_out"
+  # - Name: AllSensors_voltage_in_A_A
+  #   Description: 'voltage_in_A_A'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "voltage_in_A_A"
+  # - Name: AllSensors_voltage_in_A_C
+  #   Description: 'voltage_in_A_C'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "voltage_in_A_C"
+  # - Name: AllSensors_current_in_A_A
+  #   Description: 'current_in_A_A'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "current_in_A_A"
+  # - Name: AllSensors_total_current_out
+  #   Description: 'total_current_out'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "total_current_out"
+  # - Name: AllSensors_current_in_A_B
+  #   Description: 'current_in_A_B'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "current_in_A_B"
+  # - Name: AllSensors_current_in_A_C
+  #   Description: 'current_in_A_C'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "current_in_A_C"
+  # - Name: AllSensors_ps6_energy_out
+  #   Description: 'ps6_energy_out'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_energy_out"
+  # - Name: AllSensors_ps6_energy_in
+  #   Description: 'ps6_energy_in'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_energy_in"
+  # - Name: AllSensors_ps6_total_energy_in
+  #   Description: 'ps6_total_energy_in'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_total_energy_in"
+  # - Name: AllSensors_ps6_powerfactor
+  #   Description: 'ps6_powerfactor'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_powerfactor"
+  # - Name: AllSensors_ps6_output_current
+  #   Description: 'ps6_output_current'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_output_current"
+  # - Name: AllSensors_ps6_input_current
+  #   Description: 'ps6_input_current'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_input_current"
+  # - Name: AllSensors_ps6_fan1
+  #   Description: 'ps6_fan1'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_fan1"
+  # - Name: AllSensors_ps6_fan2
+  #   Description: 'ps6_fan2'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_fan2"
+  # - Name: AllSensors_ps6_input_power
+  #   Description: 'ps6_input_power'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_input_power"
+  # - Name: AllSensors_ps6_output_power
+  #   Description: 'ps6_output_power'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_output_power"
+  # - Name: AllSensors_ps6_temp_clip_plus
+  #   Description: 'ps6_temp_clip_plus'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_temp_clip_plus"
+  # - Name: AllSensors_ps6_temp_clip_minus
+  #   Description: 'ps6_temp_clip_minus'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_temp_clip_minus"
+  # - Name: AllSensors_ps6_temp_input
+  #   Description: 'ps6_temp_input'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_temp_input"
+  # - Name: AllSensors_ps6_temp_hotspot
+  #   Description: 'ps6_temp_hotspot'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_temp_hotspot"
+  # - Name: AllSensors_ps6_temp_output
+  #   Description: 'ps6_temp_output'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_temp_output"
+  # - Name: AllSensors_ps6_output_voltage
+  #   Description: 'ps6_output_voltage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_output_voltage"
+  # - Name: AllSensors_ps6_input_voltage
+  #   Description: 'ps6_input_voltage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps6_input_voltage"
+  # - Name: AllSensors_ps4_temp_output
+  #   Description: 'ps4_temp_output'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_temp_output"
+  # - Name: AllSensors_ps4_temp_hotspot
+  #   Description: 'ps4_temp_hotspot'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_temp_hotspot"
+  # - Name: AllSensors_ps4_temp_input
+  #   Description: 'ps4_temp_input'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_temp_input"
+  # - Name: AllSensors_ps4_temp_clip_minus
+  #   Description: 'ps4_temp_clip_minus'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_temp_clip_minus"
+  # - Name: AllSensors_ps4_temp_clip_plus
+  #   Description: 'ps4_temp_clip_plus'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_temp_clip_plus"
+  # - Name: AllSensors_ps4_total_energy_in
+  #   Description: 'ps4_total_energy_in'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_total_energy_in"
+  # - Name: AllSensors_ps4_output_current
+  #   Description: 'ps4_output_current'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_output_current"
+  # - Name: AllSensors_ps4_input_current
+  #   Description: 'ps4_input_current'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_input_current"
+  # - Name: AllSensors_ps4_energy_in
+  #   Description: 'ps4_energy_in'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_energy_in"
+  # - Name: AllSensors_ps4_energy_out
+  #   Description: 'ps4_energy_out'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_energy_out"
+  # - Name: AllSensors_ps4_fan2
+  #   Description: 'ps4_fan2'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_fan2"
+  # - Name: AllSensors_ps4_fan1
+  #   Description: 'ps4_fan1'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_fan1"
+  # - Name: AllSensors_ps4_output_power
+  #   Description: 'ps4_output_power'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_output_power"
+  # - Name: AllSensors_ps4_input_power
+  #   Description: 'ps4_input_power'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_input_power"
+  # - Name: AllSensors_ps4_output_voltage
+  #   Description: 'ps4_output_voltage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_output_voltage"
+  # - Name: AllSensors_ps4_input_voltage
+  #   Description: 'ps4_input_voltage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_input_voltage"
+  # - Name: AllSensors_ps4_powerfactor
+  #   Description: 'ps4_powerfactor'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps4_powerfactor"
+  # - Name: AllSensors_ps3_energy_out
+  #   Description: 'ps3_energy_out'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_energy_out"
+  # - Name: AllSensors_ps3_energy_in
+  #   Description: 'ps3_energy_in'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_energy_in"
+  # - Name: AllSensors_ps3_input_power
+  #   Description: 'ps3_input_power'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_input_power"
+  # - Name: AllSensors_ps3_output_power
+  #   Description: 'ps3_output_power'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_output_power"
+  # - Name: AllSensors_ps3_total_energy_in
+  #   Description: 'ps3_total_energy_in'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_total_energy_in"
+  # - Name: AllSensors_ps3_input_current
+  #   Description: 'ps3_input_current'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_input_current"
+  # - Name: AllSensors_ps3_output_current
+  #   Description: 'ps3_output_current'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_output_current"
+  # - Name: AllSensors_ps3_output_voltage
+  #   Description: 'ps3_output_voltage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_output_voltage"
+  # - Name: AllSensors_ps3_input_voltage
+  #   Description: 'ps3_input_voltage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_input_voltage"
+  # - Name: AllSensors_ps3_fan1
+  #   Description: 'ps3_fan1'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_fan1"
+  # - Name: AllSensors_ps3_fan2
+  #   Description: 'ps3_fan2'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_fan2"
+  # - Name: AllSensors_ps3_temp_clip_plus
+  #   Description: 'ps3_temp_clip_plus'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_temp_clip_plus"
+  # - Name: AllSensors_ps3_temp_clip_minus
+  #   Description: 'ps3_temp_clip_minus'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_temp_clip_minus"
+  # - Name: AllSensors_ps3_temp_output
+  #   Description: 'ps3_temp_output'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_temp_output"
+  # - Name: AllSensors_ps3_temp_hotspot
+  #   Description: 'ps3_temp_hotspot'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_temp_hotspot"
+  # - Name: AllSensors_ps3_temp_input
+  #   Description: 'ps3_temp_input'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_temp_input"
+  # - Name: AllSensors_ps3_powerfactor
+  #   Description: 'ps3_powerfactor'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps3_powerfactor"
+  # - Name: AllSensors_ps2_fan2
+  #   Description: 'ps2_fan2'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_fan2"
+  # - Name: AllSensors_ps2_fan1
+  #   Description: 'ps2_fan1'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_fan1"
+  # - Name: AllSensors_ps2_energy_in
+  #   Description: 'ps2_energy_in'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_energy_in"
+  # - Name: AllSensors_ps2_energy_out
+  #   Description: 'ps2_energy_out'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_energy_out"
+  # - Name: AllSensors_ps2_input_power
+  #   Description: 'ps2_input_power'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_input_power"
+  # - Name: AllSensors_ps2_output_power
+  #   Description: 'ps2_output_power'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_output_power"
+  # - Name: AllSensors_ps2_output_current
+  #   Description: 'ps2_output_current'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_output_current"
+  # - Name: AllSensors_ps2_input_current
+  #   Description: 'ps2_input_current'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_input_current"
+  # - Name: AllSensors_ps2_temp_hotspot
+  #   Description: 'ps2_temp_hotspot'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_temp_hotspot"
+  # - Name: AllSensors_ps2_temp_clip_plus
+  #   Description: 'ps2_temp_clip_plus'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_temp_clip_plus"
+  # - Name: AllSensors_ps2_temp_output
+  #   Description: 'ps2_temp_output'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_temp_output"
+  # - Name: AllSensors_ps2_temp_input
+  #   Description: 'ps2_temp_input'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_temp_input"
+  # - Name: AllSensors_ps2_temp_clip_minus
+  #   Description: 'ps2_temp_clip_minus'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_temp_clip_minus"
+  # - Name: AllSensors_ps2_output_voltage
+  #   Description: 'ps2_output_voltage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_output_voltage"
+  # - Name: AllSensors_ps2_input_voltage
+  #   Description: 'ps2_input_voltage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_input_voltage"
+  # - Name: AllSensors_ps2_powerfactor
+  #   Description: 'ps2_powerfactor'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_powerfactor"
+  # - Name: AllSensors_ps2_total_energy_in
+  #   Description: 'ps2_total_energy_in'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps2_total_energy_in"
+  # - Name: AllSensors_ps1_output_current
+  #   Description: 'ps1_output_current'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_output_current"
+  # - Name: AllSensors_ps1_input_current
+  #   Description: 'ps1_input_current'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_input_current"
+  # - Name: AllSensors_ps1_input_power
+  #   Description: 'ps1_input_power'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_input_power"
+  # - Name: AllSensors_ps1_output_power
+  #   Description: 'ps1_output_power'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_output_power"
+  # - Name: AllSensors_ps1_total_energy_in
+  #   Description: 'ps1_total_energy_in'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_total_energy_in"
+  # - Name: AllSensors_ps1_powerfactor
+  #   Description: 'ps1_powerfactor'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_powerfactor"
+  # - Name: AllSensors_ps1_input_voltage
+  #   Description: 'ps1_input_voltage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_input_voltage"
+  # - Name: AllSensors_ps1_output_voltage
+  #   Description: 'ps1_output_voltage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_output_voltage"
+  # - Name: AllSensors_ps1_energy_in
+  #   Description: 'ps1_energy_in'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_energy_in"
+  # - Name: AllSensors_ps1_energy_out
+  #   Description: 'ps1_energy_out'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_energy_out"
+  # - Name: AllSensors_ps1_fan2
+  #   Description: 'ps1_fan2'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_fan2"
+  # - Name: AllSensors_ps1_fan1
+  #   Description: 'ps1_fan1'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_fan1"
+  # - Name: AllSensors_ps1_temp_clip_minus
+  #   Description: 'ps1_temp_clip_minus'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_temp_clip_minus"
+  # - Name: AllSensors_ps1_temp_input
+  #   Description: 'ps1_temp_input'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_temp_input"
+  # - Name: AllSensors_ps5_energy_out
+  #   Description: 'ps5_energy_out'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_energy_out"
+  # - Name: AllSensors_ps5_energy_in
+  #   Description: 'ps5_energy_in'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_energy_in"
+  # - Name: AllSensors_ps5_powerfactor
+  #   Description: 'ps5_powerfactor'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_powerfactor"
+  # - Name: AllSensors_ps5_fan2
+  #   Description: 'ps5_fan2'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_fan2"
+  # - Name: AllSensors_ps1_temp_clip_plus
+  #   Description: 'ps1_temp_clip_plus'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_temp_clip_plus"
+  # - Name: AllSensors_ps1_temp_hotspot
+  #   Description: 'ps1_temp_hotspot'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_temp_hotspot"
+  # - Name: AllSensors_ps1_temp_output
+  #   Description: 'ps1_temp_output'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps1_temp_output"
+  # - Name: AllSensors_ps5_fan1
+  #   Description: 'ps5_fan1'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_fan1"
+  # - Name: AllSensors_ps5_input_power
+  #   Description: 'ps5_input_power'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_input_power"
+  # - Name: AllSensors_ps5_output_power
+  #   Description: 'ps5_output_power'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_output_power"
+  # - Name: AllSensors_ps5_output_voltage
+  #   Description: 'ps5_output_voltage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_output_voltage"
+  # - Name: AllSensors_ps5_input_voltage
+  #   Description: 'ps5_input_voltage'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_input_voltage"
+  # - Name: AllSensors_ps5_total_energy_in
+  #   Description: 'ps5_total_energy_in'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_total_energy_in"
+  # - Name: AllSensors_ps5_output_current
+  #   Description: 'ps5_output_current'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_output_current"
+  # - Name: AllSensors_ps5_input_current
+  #   Description: 'ps5_input_current'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_input_current"
+  # - Name: AllSensors_ps5_temp_input
+  #   Description: 'ps5_temp_input'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_temp_input"
+  # - Name: AllSensors_ps5_temp_clip_minus
+  #   Description: 'ps5_temp_clip_minus'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_temp_clip_minus"
+  # - Name: AllSensors_ps5_temp_clip_plus
+  #   Description: 'ps5_temp_clip_plus'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_temp_clip_plus"
+  # - Name: AllSensors_ps5_temp_output
+  #   Description: 'ps5_temp_output'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_temp_output"
+  # - Name: AllSensors_ps5_temp_hotspot
+  #   Description: 'ps5_temp_hotspot'
+  #   Type: Gauge
+  #   Label: ["ServerAddress"]
+  #   Datapoint: AllSensors.Sensors
+  #   Result: Reading
+  #   Filter: "ps5_temp_hotspot"
+#  - Name: PhysicalServer_State
+#    Description: 'physical server state status'
+#    Type: Gauge
+#    Label: ["ServerAddress","HostName","Model", "Manufacturer", "SerialNumber", "MemoryHealthRollupStatus", "TotalSystemMemoryGiB", "IndicatorLED", "BiosVersion", "PowerState"]
+#    Datapoint: Common
+#    Result: State
+#    StatusCode:
+#      ENABLED: 0
+#      WARNING: 1
+#      DISABLED: 2
+#      GOODINUSE: 0
+#      UNKNOWN: 99
+#  - Name: PhysicalServer_Health
+#    Description: 'physical server health status'
+#    Type: Gauge
+#    Label: ["ServerAddress","HostName","Model", "Manufacturer", "SerialNumber", "IndicatorLED", "BiosVersion"]
+#    Datapoint: Common
+#    Result: Health
+#    StatusCode:
+#      OK: 0
+#      WARNING: 1
+#      CRITICAL: 2
+#      UNKNOWN: 99
+#  - Name: PhysicalServer_PhysicalDriveStatus
+#    Description: 'physical server metal drive status'
+#    Type: Gauge
+#    Result: State
+#    Label: ["ServerAddress","HostName","Model","MediaType","BlockSizeBytes","CapableSpeedGbs","CapacityBytes", "Model","NegotiatedSpeedGbs","PredictedMediaLifeLeftPercent","SerialNumber"]
+#    Datapoint: ArrayController.PhysicalDrive
+#    StatusCode:
+#      ENABLED: 0
+#      WARNING: 1
+#      DISABLED: 2
+#      GOODINUSE: 0
+#      UNKNOWN: 99
+#      ABSENT: 2
+#  - Name: PhysicalServer_PhysicalDriveHealth
+#    Description: 'physical server metal drive health'
+#    Type: Gauge
+#    Result: Health
+#    Label: ["ServerAddress","HostName","Model","MediaType","BlockSizeBytes","CapableSpeedGbs","CapacityBytes", "Model","NegotiatedSpeedGbs","PredictedMediaLifeLeftPercent","SerialNumber"]
+#    Datapoint: ArrayController.PhysicalDrive
+#    StatusCode:
+#      OK: 0
+#      WARNING: 1
+#      CRITICAL: 2
+#      UNKNOWN: 99
+#  - Name: PhysicalServer_Memory_Status
+#    Description: 'physical server metal memory status'
+#    Type: Gauge
+#    Result: State
+#    Label: ["ServerAddress","HostName","Id","MemoryDeviceType","MemoryType"]
+#    Datapoint: ArrayMemory.ArrayMemoryState
+#    StatusCode:
+#      ENABLED: 0
+#      WARNING: 1
+#      DISABLED: 2
+#      GOODINUSE: 0
+#      UNKNOWN: 99
+#      ABSENT: 2
+#  - Name: PhysicalServer_Memory_Health
+#    Description: 'physical server metal memory health'
+#    Type: Gauge
+#    Result: Health
+#    Label: ["ServerAddress","HostName","Id","MemoryDeviceType","MemoryType"]
+#    Datapoint: ArrayMemory.ArrayMemoryState
+#    StatusCode:   
+#      OK: 0       
+#      WARNING: 1  
+#      CRITICAL: 2 
+#      UNKNOWN: 99  
+#  - Name: PhysicalServer_Memory_Metrics
+#    Description: 'physical server memory metrics'
+#    Type: Gauge
+#    Label: ["ServerAddress","HostName","Id", "BandwidthPercent","CapacityUtilizationPercent","CorrectableECCErrorCount","UncorrectableECCErrorCount","OperatingSpeedMHz"]
+#    Datapoint: ArrayMemory.ArrayMemoryMetrics
+#    Result: MemoryMetrics
+#  - Name: PhysicalServer_Leak_Status
+#    Description: 'physical server metal leakdetector status'
+#    Type: Gauge
+#    Result: State
+#    Label: ["ServerAddress","HostName","Id","DetectorState"]
+#    Datapoint: ArrayLeak.ArrayLeakDetector
+#    StatusCode:
+#      ENABLED: 0
+#      WARNING: 1
+#      DISABLED: 2
+#      GOODINUSE: 0
+#      UNKNOWN: 99
+#      ABSENT: 2
+#  - Name: PhysicalServer_Leak_Health
+#    Description: 'physical server metal leakdetector healt'
+#    Type: Gauge
+#    Result: Health
+#    Label: ["ServerAddress","HostName","Id","DetectorState"]
+#    Datapoint: ArrayLeak.ArrayLeakDetector
+#    StatusCode:
+#      OK: 0
+#      WARNING: 1
+#      CRITICAL: 2
+#      UNKNOWN: 99
+#  - Name: PhysicalServer_fanReadingPercent
+#    Description: 'physical server fan reading percent'
+#    Type: Gauge
+#    Label: ["ServerAddress","HostName","Name","SensorNumber"]
+#    Datapoint: Thermal.Fans
+#    Result: Reading
+#  - Name: PhysicalServer_temperatureReading
+#    Description: 'physical server temperature reading percent'
+#    Type: Gauge
+#    Label: ["ServerAddress","HostName","Name","PhysicalContext","SensorNumber"]
+#    Datapoint: Thermal.Temperatures
+#    Result: ReadingCelsius
