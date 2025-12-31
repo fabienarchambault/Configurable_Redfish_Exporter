@@ -1,25 +1,11 @@
+---
 Metadata:
   RedfishV1:
-    "$inituri": /redfish/v1/Systems
-    "$jsonpath": $.Members[*].*
+    "$inituri": /redfish/v1/Chassis
+    "$jsonpath": $.Members[-1].*
     "$tokenuri": /redfish/v1/SessionService/Sessions
-    # ">>driveid": -1
-    ">>serverid": -1 ### key that you can collect from URI
-#  RedfishV2:
-
-# Data:
-#   Base:
-#     VendorId: $.Id
-#     Manufacturer: $.Manufacturer
-#     Model: $.Model
+    ">>serverid": -1  ### key that you can collect from URI
 
 ModelSchema:
-  HPE:
-      Gen9: HPEProLiantGen9.yml
-      Gen10: HPEProLiantGen10.yml
-      Gen11: HPEProLiantGen11.yml
-  Dell:
-      R750: DellPowerEdgeR750.yml
-      R650: DellPowerEdgeR650.yml
-      R630: DellPowerEdgeR630.yml
-      R6515: DellPowerEdgeR6515.yml
+  DELTA:
+    44: hw_DELTA_44.yml
