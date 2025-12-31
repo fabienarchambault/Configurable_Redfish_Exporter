@@ -259,6 +259,7 @@ async def dataCollector(serverAddress,username,password,templateDir,logLevel):
     schema=readYAMLTemplate(modelSchemaDir)
     # logging.info(schema)
     dataNewSchema = schema['Data']
+    logging.debug("[%s] dataNewSchema: %s" % (serverAddress, dataNewSchema))
     if schema is None:
         logging.error("[%s] Can't generate vendor schema, please check again" % serverAddress)
         return

@@ -53,11 +53,16 @@ def dataReconstructor(dataRaw,dataNewSchema, templateDir, serverAddress,logLevel
         elements = [int(k) if k.isdigit() else k for k in elements if k != '']
         # logging.info(elements)
         schemaCurrent = dataNewSchema
+        logging.debug("[%s] Initial schemaCurrent: %s" % (serverAddress, schemaCurrent))
         for element in elements[:-1]:
             # logging.info("[%s] Current: %s " % dataTemplate)
             current = current.setdefault(element, dict())
             if not isinstance(element,int):
+                if element not in schemaCurrent:
+                    logging.error("[%s] Key %s not found in schemaCurrent" % (serverAddress, element))
+                    continue
                 schemaCurrent = schemaCurrent[element]
+                logging.debug("[%s] Updated schemaCurrent: %s" % (serverAddress, schemaCurrent))
         # logging.info(IdPoints[abspath])
         newDict = dict()
         newDict['Id'] = IdPoints[abspath]
@@ -98,7 +103,7 @@ def dataReconstructor(dataRaw,dataNewSchema, templateDir, serverAddress,logLevel
                         newDict.update({'Status': {'State': 'Unknown','Health':'Unknown'}})
                     else:
                         newDict.update({elementKey:'Unknown'})
-        current = current.update(newDict)
+        current.update(newDict)
     newData = fixListConverter(dataTemplate)
     # with open('/tmp/%s_newdata.txt' % serverAddress, 'w') as file:
     #     json.dump(newData, file)

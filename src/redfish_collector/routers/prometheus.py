@@ -102,6 +102,7 @@ async def read_all(serverAddress: str = Query(None), config: str = Query(None), 
             return PlainTextResponse(metrics)
     try:
         dataRaw, dataNewSchema, modelSchemaDir = await dataCollector(serverAddress,username,password,templateDir,loglevel)
+        logging.debug("[%s] dataNewSchema: %s" % (serverAddress, dataNewSchema))
         dataReconstructor(dataRaw, dataNewSchema, modelSchemaDir, serverAddress,loglevel)
 
         dataDir = f'{REDFISH_DATA}NewData/{serverAddress}.json'
@@ -127,24 +128,50 @@ async def read_all(serverAddress: str = Query(None), config: str = Query(None), 
                     if not isinstance(collectedData.get(elements[0]), list):
                         logging.warning(f"[{serverAddress}] Data point root is not a list: {elements[0]}")
                         continue
-                    idList = jsonpathCollector(collectedData,str("$..Id"),output='fullpath&value')
-                    for memberID in idList:
-                        if elements[-1] in memberID and elements[0] in memberID:
-                            labelList = list()
-                            for label in metric['Label']:
-                                if label == 'ServerAddress':
-                                    labelList.append(serverAddress)
-                                elif label == 'HostName':
-                                    labelList.append(hostName)
+
+                    # Special handling for Sensors metric
+                    if metric['Name'] == 'Sensors' and len(elements) == 2 and elements[0] == 'Sensors' and elements[1] == 'DeviceName':
+                        logging.debug("[%s] Processing Sensors metric with special logic" % serverAddress)
+                        sensors_list = collectedData.get('Sensors', [{}])[0].get('Sensors', [])
+                        for sensor in sensors_list:
+                            labelList = [serverAddress]
+                            if 'HostName' in metric['Label']:
+                                labelList.append(hostName)
+                            if 'DeviceName' in metric['Label']:
+                                labelList.append(sensor.get('DeviceName', 'Unknown'))
+
+                            logging.debug("[%s] Sensor label list: %s" % (serverAddress, labelList))
+
+                            # Get the reading value
+                            reading = sensor.get('Reading')
+                            if reading is not None:
+                                if isinstance(reading, (int, float)):
+                                    componentMetrics[metric['Name']].labels(*labelList).set(float(reading))
                                 else:
-                                    newJSONPath = re.sub('Id', label, memberID)
-                                    result = jsonpathCollector(collectedData,newJSONPath)
-                                    if result is not False:
-                                        labelList.append(result[0])
+                                    logging.error("[%s] Sensor reading is not a number: %s" % (serverAddress, reading))
+                                    componentMetrics[metric['Name']].labels(*labelList).set(999)
+                            else:
+                                logging.error("[%s] Sensor reading is None for device: %s" % (serverAddress, sensor.get('DeviceName', 'Unknown')))
+                                componentMetrics[metric['Name']].labels(*labelList).set(999)
+                    else:
+                        idList = jsonpathCollector(collectedData,str("$..Id"),output='fullpath&value')
+                        for memberID in idList:
+                            if elements[-1] in memberID and elements[0] in memberID:
+                                labelList = list()
+                                for label in metric['Label']:
+                                    if label == 'ServerAddress':
+                                        labelList.append(serverAddress)
+                                    elif label == 'HostName':
+                                        labelList.append(hostName)
                                     else:
-                                        labelList.append('Unknown')
-                                        continue
-                            logging.debug("[%s] List Label: %s" % (serverAddress,labelList))
+                                        newJSONPath = re.sub('Id', label, memberID)
+                                        result = jsonpathCollector(collectedData,newJSONPath)
+                                        if result is not False:
+                                            labelList.append(result[0])
+                                        else:
+                                            labelList.append('Unknown')
+                                            continue
+                                logging.debug("[%s] List Label: %s" % (serverAddress,labelList))
                             if 'State' in metric['Result'] or 'Health' in metric['Result']:
                                 if 'StatusCode' not in metric:
                                     logging.error("[%s] Can't find StatusCode, please check again!" % (serverAddress))
@@ -174,15 +201,16 @@ async def read_all(serverAddress: str = Query(None), config: str = Query(None), 
                                 newJSONPath = re.sub('Id', metric['Result'], memberID)
                                 value = jsonpathCollector(collectedData,str(newJSONPath))
                                 if value is False:
+                                    logging.error("[%s] Value for %s isn't existed: %s" % (serverAddress,str(newJSONPath),value))
                                     componentMetrics[metric['Name']].labels(*labelList).set(999)
                                 else:
-                                    value =value[0]
-                                logging.debug("Value type: %s" % type(value))
-                                if isinstance(value,int) or isinstance(value,float):
-                                    componentMetrics[metric['Name']].labels(*labelList).set(float(value))       
-                                else:
-                                    logging.error("[%s] Value %s isn't float: %s" % (serverAddress,metric['Result'],value))
-                                    componentMetrics[metric['Name']].labels(*labelList).set(999)   
+                                    value = value[0]
+                                    logging.debug("Value type: %s" % type(value))
+                                    if isinstance(value,int) or isinstance(value,float):
+                                        componentMetrics[metric['Name']].labels(*labelList).set(float(value))
+                                    else:
+                                        logging.error("[%s] Value %s isn't float: %s" % (serverAddress,metric['Result'],value))
+                                        componentMetrics[metric['Name']].labels(*labelList).set(999)
                             logging.debug("[%s] ID List Collected with in tree %s to %s" % (serverAddress,metric['Datapoint'],labelList)) 
                 else:
                     logging.error("[%s] Not found Type %s, please call Admin" % (serverAddress, metric['Type']))
