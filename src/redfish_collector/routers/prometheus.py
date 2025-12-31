@@ -134,11 +134,18 @@ async def read_all(serverAddress: str = Query(None), config: str = Query(None), 
                         logging.debug("[%s] Processing Sensors metric with special logic" % serverAddress)
                         sensors_list = collectedData.get('Sensors', [{}])[0].get('Sensors', [])
                         for sensor in sensors_list:
-                            labelList = [serverAddress]
-                            if 'HostName' in metric['Label']:
-                                labelList.append(hostName)
-                            if 'DeviceName' in metric['Label']:
-                                labelList.append(sensor.get('DeviceName', 'Unknown'))
+                            labelList = []
+                            for label in metric['Label']:
+                                if label == 'ServerAddress':
+                                    labelList.append(serverAddress)
+                                elif label == 'HostName':
+                                    labelList.append(hostName)
+                                elif label == 'DeviceName':
+                                    labelList.append(sensor.get('DeviceName', 'Unknown'))
+                                elif label == 'ReadingType':
+                                    labelList.append(sensor.get('ReadingType', 'Unknown'))
+                                elif label == 'ReadingUnits':
+                                    labelList.append(sensor.get('ReadingUnits', 'Unknown'))
 
                             logging.debug("[%s] Sensor label list: %s" % (serverAddress, labelList))
 
